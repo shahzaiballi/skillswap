@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load form_filters %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-gray-800 rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-indigo-400 mb-6">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {% for field in form %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">{{ field.label }}</label>
+                        {{ field|addclass:"w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" }}
+                        {% if field.errors %}
+                            <p class="text-red-400 text-sm mt-1">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md mt-6 transition duration-300">
+                Login
+            </button>
+        </form>
+        <div class="mt-6 text-center">
+            <p class="text-gray-400">
+                Don't have an account? 
+                <a href="{% url 'signup' %}" class="text-indigo-400 hover:text-indigo-300">SignUp here</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

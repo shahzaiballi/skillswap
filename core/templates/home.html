@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="min-h-screen">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0,0 L100,0 L100,100 L0,100 Z" fill="url(#grid-pattern)"></path>
+                <defs>
+                    <pattern id="grid-pattern" width="10" height="10" patternUnits="userSpaceOnUse">
+                        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"></path>
+                    </pattern>
+                </defs>
+            </svg>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 animate-fade-in">
+                    <h1 class="text-5xl font-bold text-indigo-400 leading-tight">
+                        Share Your Skills,<br>
+                        Learn Something New
+                    </h1>
+                    <p class="text-xl text-gray-400">
+                        Join our community of learners and teachers. Exchange your expertise and discover new skills through mutual learning experiences.
+                    </p>
+                    {% if not user.is_authenticated %}
+                    <div class="flex space-x-4">
+                        <a href="{% url 'signup' %}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+                            Get Started
+                        </a>
+                        <a href="#how-it-works" class="inline-block border border-indigo-600 text-indigo-400 font-bold py-3 px-8 rounded-lg transition duration-300 hover:bg-indigo-600 hover:text-white">
+                            Learn More
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="relative hidden lg:block">
+                    <svg class="w-full" viewBox="0 0 500 400">
+                        <!-- Decorative learning illustration -->
+                        <circle cx="250" cy="200" r="150" fill="#4F46E5" opacity="0.1" class="animate-pulse"/>
+                        <path d="M150,200 Q250,100 350,200" stroke="#4F46E5" fill="none" stroke-width="4" class="animate-draw"/>
+                        <rect x="175" y="150" width="150" height="100" rx="10" fill="#4F46E5" opacity="0.2"/>
+                        <circle cx="250" cy="200" r="50" fill="#4F46E5" opacity="0.3"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Categories -->
+    <div class="bg-gray-800/50 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-indigo-400 mb-8 text-center">Popular Skills Categories</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for category in categories|slice:":3" %}
+                <div class="bg-gray-800 rounded-lg p-6 transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                    <h3 class="text-xl font-semibold text-white mb-3">{{ category.name }}</h3>
+                    <p class="text-gray-400">{{ category.description }}</p>
+                </div>
+                {% empty %}
+                <!-- Placeholder categories if none exist -->
+                <div class="bg-gray-800 rounded-lg p-6 transform transition duration-300 hover:scale-105">
+                    <h3 class="text-xl font-semibold text-white mb-3">Programming</h3>
+                    <p class="text-gray-400">Learn coding, web development, and software engineering skills.</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 transform transition duration-300 hover:scale-105">
+                    <h3 class="text-xl font-semibold text-white mb-3">Languages</h3>
+                    <p class="text-gray-400">Master new languages with native speakers and experienced teachers.</p>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 transform transition duration-300 hover:scale-105">
+                    <h3 class="text-xl font-semibold text-white mb-3">Music</h3>
+                    <p class="text-gray-400">Learn instruments, music theory, and composition techniques.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div id="how-it-works" class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-indigo-400 mb-12 text-center">How SkillSwap Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="relative p-6">
+                    <div class="absolute -left-4 -top-4 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold text-white">1</div>
+                    <h3 class="text-xl font-semibold text-white mb-3 mt-4">List Your Skills</h3>
+                    <p class="text-gray-400">Share what you're good at and what you can teach others. Be specific about your expertise level and teaching style.</p>
+                </div>
+                <div class="relative p-6">
+                    <div class="absolute -left-4 -top-4 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold text-white">2</div>
+                    <h3 class="text-xl font-semibold text-white mb-3 mt-4">Find a Match</h3>
+                    <p class="text-gray-400">Browse skills you want to learn and connect with potential skill swap partners who want to learn what you can teach.</p>
+                </div>
+                <div class="relative p-6">
+                    <div class="absolute -left-4 -top-4 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold text-white">3</div>
+                    <h3 class="text-xl font-semibold text-white mb-3 mt-4">Start Learning</h3>
+                    <p class="text-gray-400">Schedule sessions, exchange skills, and grow together. Rate your experience and build your learning network.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!-- Featured Skills -->
+<div class="bg-gray-800/50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-indigo-400 mb-8 text-center">Featured Skills</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for skill in featured_skills %}
+            <div class="bg-gray-800 rounded-lg p-6 transform transition duration-300 hover:scale-105">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-semibold text-white">{{ skill.name }}</h3>
+                    <span class="px-3 py-1 rounded-full text-sm bg-indigo-800 text-indigo-200">
+                        {{ skill.duration }} mins
+                    </span>
+                </div>
+                <p class="text-gray-400 mb-4">{{ skill.description|truncatechars:100 }}</p>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <span class="text-sm text-gray-400 block">By {{ skill.sharer.get_full_name }}</span>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <div class="flex text-yellow-400">
+                                {% with ''|rjust:5 as range %}
+                                {% for _ in range %}
+                                    <span class="{% if skill.reviews.exists and forloop.counter <= skill.average_rating %}text-yellow-400{% else %}text-gray-600{% endif %}">★</span>
+                                {% endfor %}
+                                {% endwith %}
+                            </div>
+                            <span class="text-sm text-gray-400">({{ skill.review_count|default:0 }})</span>
+                        </div>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'book_session' skill.id %}" class="text-indigo-400 hover:text-indigo-300 transition duration-300">
+                        Learn More →
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <!-- Placeholder skills if none exist -->
+            <div class="bg-gray-800 rounded-lg p-6 transform transition duration-300 hover:scale-105">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-semibold text-white">Python Programming</h3>
+                    <span class="px-3 py-1 rounded-full text-sm bg-indigo-800 text-indigo-200">60 mins</span>
+                </div>
+                <p class="text-gray-400 mb-4">Learn Python programming from basics to advanced concepts with practical examples.</p>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <span class="text-sm text-gray-400 block">By John Doe</span>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <div class="flex text-gray-600">
+                                <span>★</span>
+                                <span>★</span>
+                                <span>★</span>
+                                <span>★</span>
+                                <span>★</span>
+                            </div>
+                            <span class="text-sm text-gray-400">(0)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+    <!-- Call to Action -->
+    <div class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4">Ready to Start Learning?</h2>
+            <p class="text-xl text-gray-400 mb-8">Join our community and start exchanging skills today.</p>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'signup' %}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+                Join SkillSwap Now
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes draw {
+        from { stroke-dashoffset: 1000; }
+        to { stroke-dashoffset: 0; }
+    }
+
+    .animate-fade-in {
+        animation: fade-in 1s ease-out;
+    }
+
+    .animate-draw {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: draw 2s ease-out forwards;
+    }
+</style>
+{% endblock %}

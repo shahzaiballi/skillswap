@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Delete Skill{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto space-y-8">
+    <h1 class="text-3xl font-bold text-indigo-400 mb-6">Delete Skill</h1>
+
+    <div class="bg-gray-800 rounded-lg p-6">
+        <p class="text-gray-300 mb-6">Are you sure you want to delete "{{ skill.name }}"? This action cannot be undone.</p>
+        
+        <form method="post" class="flex justify-end space-x-4">
+            {% csrf_token %}
+            <a href="{% url 'skill_management' %}" class="px-4 py-2 border border-gray-600 text-gray-300 rounded-md hover:bg-gray-700 transition duration-300">
+                Cancel
+            </a>
+            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition duration-300">
+                Delete Skill
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

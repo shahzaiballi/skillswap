@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load form_filters %}
+{% block title %}Manage Skills{% endblock %}
+{% block content %}
+<div class="space-y-8">
+    <h1 class="text-3xl font-bold text-indigo-400 mb-6">Manage Skills</h1>
+
+    <!-- Add New Skill Form -->
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-indigo-400 mb-4">Add New Skill</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">{{ field.label }}</label>
+                    {{ field|addclass:"w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" }}
+                    {% if field.help_text %}
+                        <p class="text-sm text-gray-400 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <p class="text-red-400 text-sm mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md mt-6 transition duration-300">
+                Add Skill
+            </button>
+        </form>
+    </div>
+
+    <!-- Existing Skills -->
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-indigo-400 mb-4">My Skills</h2>
+        {% if skills %}
+            <div class="grid gap-4">
+                {% for skill in skills %}
+                <div class="bg-gray-700 p-4 rounded-md">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold text-white">{{ skill.name }}</h3>
+                            <p class="text-gray-400">{{ skill.description }}</p>
+                            <div class="mt-2 text-sm text-gray-400">
+                                <p>Duration: {{ skill.duration }} minutes</p>
+                                <p>Category: {{ skill.category.name }}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col space-y-2">
+                            <span class="px-3 py-1 rounded-full text-sm {% if skill.is_available %}bg-green-800 text-green-200{% else %}bg-red-800 text-red-200{% endif %}">
+                                {{ skill.is_available|yesno:"Available,Not Available" }}
+                            </span>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'edit_skill' skill.id %}" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm transition duration-300">
+                                    Edit
+                                </a>
+                                <a href="{% url 'delete_skill' skill.id %}" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition duration-300">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-400">No skills added yet. Use the form above to add your first skill!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

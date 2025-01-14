@@ -1,0 +1,123 @@
+{# dashboard.html #}
+{% extends 'base.html' %}
+{% block title %}Skill Sharer Dashboard{% endblock %}
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-indigo-400">Skill Sharer Dashboard</h1>
+        <a href="{% url 'skill_management' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-300">
+            Manage Skills
+        </a>
+    </div>
+
+    <!-- Booking Requests -->
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-indigo-400 mb-4">Booking Requests</h2>
+        {% if bookings %}
+        <div class="grid gap-4">
+            {% for booking in bookings %}
+            {% if booking.status == 'PENDING' %}
+            <div class="bg-gray-700 p-4 rounded-md">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold text-white">{{ booking.skill.name }}</h3>
+                            <p class="text-gray-400">{{ booking.booking_date|date:"F j, Y" }} at {{ booking.booking_time|time:"g:i A" }}</p>
+                            <p class="text-gray-400">Learner: {{ booking.learner.get_full_name }}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm bg-yellow-800 text-yellow-200">
+                            PENDING
+                        </span>
+                    </div>
+                    
+                    <!-- Swap Skill Details -->
+                    <div class="border-t border-gray-600 pt-4">
+                        <h4 class="text-sm font-semibold text-indigo-400 mb-2">Offered Skill in Exchange</h4>
+                        <p class="text-white font-medium">{{ booking.swap_skill_name }}</p>
+                        <p class="text-gray-400 text-sm mt-1">{{ booking.swap_skill_description }}</p>
+                        <div class="flex gap-4 mt-2 text-sm text-gray-400">
+                            <p>Duration: {{ booking.swap_skill_duration }} minutes</p>
+                            <p>Category: {{ booking.swap_skill_category.name }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Accept/Reject Buttons -->
+                    <div class="flex justify-end space-x-3 mt-4">
+                        <form method="post" action="{% url 'reject_booking' booking.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition duration-300">
+                                Decline
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'accept_booking' booking.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition duration-300">
+                                Accept
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-400">No pending booking requests.</p>
+        {% endif %}
+    </div>
+
+    <!-- My Skills Section -->
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-indigo-400 mb-4">My Skills</h2>
+        {% if skills %}
+        {% for skill in skills %}
+        <div class="bg-gray-700 p-4 rounded-md">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center space-x-3 mb-2">
+                        <h3 class="font-semibold text-white">{{ skill.name }}</h3>
+                        <div class="flex items-center space-x-2">
+                            <div class="flex text-yellow-400">
+                                {% with ''|rjust:5 as range %}
+                                {% for _ in range %}
+                                    <span class="{% if skill.reviews.exists and forloop.counter <= skill.average_rating %}text-yellow-400{% else %}text-gray-600{% endif %}">★</span>
+                                {% endfor %}
+                                {% endwith %}
+                            </div>
+                            <span class="text-sm text-gray-400">({{ skill.review_count|default:0 }})</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">{{ skill.description }}</p>
+                    <div class="mt-2 text-sm text-gray-400">
+                        <p>Duration: {{ skill.duration }} minutes</p>
+                        <p>Category: {{ skill.category.name }}</p>
+                    </div>
+                </div>
+                <div class="flex flex-col space-y-2">
+                    <span class="px-3 py-1 rounded-full text-sm {% if skill.is_available %}bg-green-800 text-green-200{% else %}bg-red-800 text-red-200{% endif %}">
+                        {{ skill.is_available|yesno:"Available,Not Available" }}
+                    </span>
+                    <div class="flex space-x-2">
+                        <a href="{% url 'edit_skill' skill.id %}" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm transition duration-300">
+                            Edit
+                        </a>
+                        <a href="{% url 'delete_skill' skill.id %}" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition duration-300">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+            <div class="text-center py-8">
+                <p class="text-gray-400 mb-4">You haven't added any skills yet.</p>
+                <a href="{% url 'skill_management' %}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-300">
+                    Add Your First Skill
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

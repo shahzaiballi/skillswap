@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load form_filters %}
+{% block title %}Book Session - {{ skill.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-indigo-400 mb-2">Book Session</h1>
+        <p class="text-gray-400">You're booking a session for {{ skill.name }}</p>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold text-white mb-4">Skill Details</h2>
+        <div class="space-y-3">
+            <p class="text-gray-300"><span class="text-gray-400">Instructor:</span> {{ skill.sharer.get_full_name }}</p>
+            <p class="text-gray-300"><span class="text-gray-400">Duration:</span> {{ skill.duration }} minutes</p>
+            <p class="text-gray-300"><span class="text-gray-400">Category:</span> {{ skill.category.name }}</p>
+            <p class="text-gray-300"><span class="text-gray-400">Description:</span><br>{{ skill.description }}</p>
+        </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-white mb-4">Select Date and Time</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">{{ field.label }}</label>
+                    {{ field|addclass:"w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" }}
+                    {% if field.help_text %}
+                        <p class="text-sm text-gray-400 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <p class="text-red-400 text-sm mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <a href="{% url 'browse_skills' %}" class="px-4 py-2 border border-gray-600 rounded-md text-gray-300 hover:bg-gray-700 transition duration-300">
+                    Cancel
+                </a>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-300">
+                    Request Booking
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

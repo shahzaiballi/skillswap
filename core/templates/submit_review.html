@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}Submit Review{% endblock %}
+
+{% block content %}
+<div class="bg-gray-800 p-6 rounded-lg max-w-2xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-indigo-400">Leave a Review</h1>
+        <span class="px-3 py-1 rounded-full text-sm bg-blue-800 text-blue-200">{{ booking.status }}</span>
+    </div>
+
+    <div class="mb-6">
+        <h2 class="text-white mb-2">{{ booking.skill.name }}</h2>
+        <p class="text-gray-400">with {{ booking.skill.sharer.get_full_name }}</p>
+        <p class="text-gray-400">{{ booking.booking_date|date:"F j, Y" }} at {{ booking.booking_time|time:"g:i A" }}</p>
+    </div>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <div>
+            <h3 class="text-white mb-4">Rating</h3>
+            <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5" class="hidden">
+                <label for="star5" class="star">★</label>
+                <input type="radio" id="star4" name="rating" value="4" class="hidden">
+                <label for="star4" class="star">★</label>
+                <input type="radio" id="star3" name="rating" value="3" class="hidden">
+                <label for="star3" class="star">★</label>
+                <input type="radio" id="star2" name="rating" value="2" class="hidden">
+                <label for="star2" class="star">★</label>
+                <input type="radio" id="star1" name="rating" value="1" class="hidden">
+                <label for="star1" class="star">★</label>
+            </div>
+            <p id="ratingText" class="text-gray-400 mt-2 text-center">Click to rate</p>
+        </div>
+
+        <div>
+            <h3 class="text-white mb-2">Your Review</h3>
+            <textarea 
+                name="comment" 
+                rows="4" 
+                class="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                placeholder="Write your review here..."
+                maxlength="1000"
+            ></textarea>
+            <div class="text-right text-gray-400 text-sm">
+                <span id="charCount">0</span>/1000
+            </div>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+            <a href="{% url 'learner_dashboard' %}" class="px-4 py-2 bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 transition duration-300">
+                Cancel
+            </a>
+            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300">
+                Submit Review
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.star {
+    font-size: 2.5rem;
+    color: #4B5563; /* gray-600 */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.star:hover,
+.star:hover ~ .star,
+input:checked ~ .star {
+    color: #FBBF24; /* yellow-400 */
+    transform: scale(1.1);
+}
+
+.star-rating:hover .star {
+    color: #4B5563;
+}
+
+.star-rating:hover .star:hover,
+.star-rating:hover .star:hover ~ .star {
+    color: #FBBF24;
+    transform: scale(1.1);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for textarea
+    const textarea = document.querySelector('textarea');
+    const charCount = document.getElementById('charCount');
+    
+    textarea.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+    });
+
+    // Star rating functionality
+    const ratingText = document.getElementById('ratingText');
+    const ratingMessages = {
+        1: "Poor - Very unsatisfied",
+        2: "Fair - Could be better",
+        3: "Good - Met expectations",
+        4: "Great - Very satisfied",
+        5: "Excellent - Exceeded expectations"
+    };
+
+    document.querySelectorAll('input[name="rating"]').forEach(input => {
+        input.addEventListener('change', function() {
+            ratingText.textContent = ratingMessages[this.value];
+        });
+    });
+});
+</script>
+{% endblock %}
